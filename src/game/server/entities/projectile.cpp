@@ -104,7 +104,12 @@ void CProjectile::Snap(int SnappingClient)
 	if(NetworkClipped(SnappingClient, GetPos(Ct)))
 		return;
 
-	CNetObj_Projectile *pProj = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_ID, sizeof(CNetObj_Projectile)));
-	if(pProj)
-		FillInfo(pProj);
+	CNetObj_Pickup *pP = static_cast<CNetObj_Pickup *>(Server()->SnapNewItem(NETOBJTYPE_PICKUP, m_ID, sizeof(CNetObj_Pickup)));
+	if(!pP)
+		return;
+
+	pP->m_X = (int)GetPos(Ct).x;
+	pP->m_Y = (int)GetPos(Ct).y;
+	pP->m_Type = POWERUP_HEALTH;
+	pP->m_Subtype = 0;
 }
