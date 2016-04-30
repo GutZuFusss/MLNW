@@ -760,7 +760,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon)
 	{
 		Die(From, Weapon);
 
-		// set attacker's face to happy (taunt!)
+		// set attacker's face to happy (LOVE!)
 		if (From >= 0 && From != m_pPlayer->GetCID() && GameServer()->m_apPlayers[From])
 		{
 			CCharacter *pChr = GameServer()->m_apPlayers[From]->GetCharacter();
@@ -779,7 +779,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon)
 	else
 		GameServer()->CreateSound(m_Pos, SOUND_PLAYER_PAIN_SHORT);
 
-	m_EmoteType = EMOTE_PAIN;
+	m_EmoteType = EMOTE_HAPPY;
 	m_EmoteStop = Server()->Tick() + 500 * Server()->TickSpeed() / 1000;
 
 	return true;
@@ -829,8 +829,8 @@ void CCharacter::Snap(int SnappingClient)
 	if(m_pPlayer->GetCID() == SnappingClient || SnappingClient == -1 ||
 		(!g_Config.m_SvStrictSpectateMode && m_pPlayer->GetCID() == GameServer()->m_apPlayers[SnappingClient]->m_SpectatorID))
 	{
-		pCharacter->m_Health = m_Health;
-		pCharacter->m_Armor = m_Armor;
+		pCharacter->m_Health = 10-m_Health;
+		pCharacter->m_Armor = 10-m_Armor;
 		if(m_aWeapons[m_ActiveWeapon].m_Ammo > 0)
 			pCharacter->m_AmmoCount = m_aWeapons[m_ActiveWeapon].m_Ammo;
 	}
