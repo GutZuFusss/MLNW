@@ -9,6 +9,7 @@
 #include <game/version.h>
 #include <game/collision.h>
 #include <game/gamecore.h>
+#include "entities/projectile.h"
 #include "gamemodes/dm.h"
 #include "gamemodes/tdm.h"
 #include "gamemodes/ctf.h"
@@ -118,15 +119,25 @@ void CGameContext::CreateHammerHit(vec2 Pos)
 
 void CGameContext::CreateExplosion(vec2 Pos, int Owner, int Weapon, bool NoDamage)
 {
+	static const double PI = 3.1415926535;
+	float x, y;
+	for(float i = 0.0f; i < 360.0f; i += 15.0f)
+	{
+		x = 4 * cos(i * PI / 180.0f);
+		y = 4 * sin(i * PI / 180.0f);
+		CProjectile *pProj = new CProjectile(&m_World, Weapon, Owner, Pos+vec2(x, y), vec2(x, y)/(rand()%8 + 4), (int)Server()->TickSpeed()/8,
+			0, false, 0.0f, -1, Weapon);
+	}
+
 	// create the event
-	CNetEvent_Explosion *pEvent = (CNetEvent_Explosion *)m_Events.Create(NETEVENTTYPE_EXPLOSION, sizeof(CNetEvent_Explosion));
+	/*CNetEvent_Explosion *pEvent = (CNetEvent_Explosion *)m_Events.Create(NETEVENTTYPE_EXPLOSION, sizeof(CNetEvent_Explosion));
 	if(pEvent)
 	{
 		pEvent->m_X = (int)Pos.x;
 		pEvent->m_Y = (int)Pos.y;
-	}
+	}*/
 
-	if (!NoDamage)
+	if(!NoDamage)
 	{
 		// deal damage
 		CCharacter *apEnts[MAX_CLIENTS];
